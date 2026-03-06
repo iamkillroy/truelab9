@@ -15,15 +15,7 @@ class MaxHeap:
         if self._adam is None: #gotta start with the basics
             self._adam = newBinaryNode
             return None
-        #first let's traverse to the lowest value on the tree.
-        lowestNode = self._adam
-        while lowestNode.has_branch("right"):
-            logger.debug(f"Traversing down, currently at {lowestNode}")
-            lowestNode = lowestNode.get_branch("right")
-            #we go down to the tippity bottom of the tree
-            #all the way to the rightmost node
-        #we now have the lowest node in the entire tree
-        #we will keep looping until we find the node that is greater
+        #we will keep looping until we find the node that is less 
         #than the newBinaryNode
         #we also have to check branches so that in this example
         #        50
@@ -31,8 +23,58 @@ class MaxHeap:
         #   30      40
         # and we try to add 35 that we add it to the right of 30
         #seems tough but recursion can help us out
-        self.__recadd( lowestNode, newBinaryNode) #start to add recursively starting at lowest Node
-    def __recadd(self, compareNode: BinaryNode, newBinaryNode: BinaryNode): 
+        self.__recadd(self._adam, newBinaryNode) #start to add recursively starting at lowest Node
+    def __reclean(self, compareNode: BinaryNode, newBinaryNode: BinaryNode):
+        pass
+    def __recadd(self, compareNode: BinaryNode, newBinaryNode: BinaryNode):
+        
+        if compareNode < newBinaryNode:
+            #we found the spot here.
+            #now there may be another node on another branch
+            # so we have to check
+            if compareNode.branch_count() != 2:
+                if not compareNode.has_branch("right"):
+                    compareNode.set_branch("right", newBinaryNode)
+                if not compareNode.has_branch("left"):
+                    compareNode.set_branch("left", newBinaryNode)
+            else: #the compare node has two, this is where it gets tricky
+                #__reclean every single branch
+                #rec clean will basically make sure each binary tree segment is complete
+                #when accounting for offsets n deep
+                #like so
+
+                #           50
+                #         /   \
+                #       30
+                #     /   \
+                #    25   27
+                #   /    /  \
+                #  3    19   22
+                # if we wanna add element 29 and we default right
+                # that means that 27 and the higher element in the branch needs to appear
+                #so it becomes something like this
+                #           50
+                #         /   \
+                #       30
+                #     /   \
+                #    25   29
+                #   /    /  \
+                #  3    27  22
+                #      /
+                #     19
+                if compareNode.get_branch("left") > newBinaryNode:
+                    self.__reclean(self, compareNode.get_branch("left"), newBinaryNode)
+                if compareNode.get_branch("right") > newBinaryNode:
+                    self.__reclean(self, compareNode.get_branch("right"), newBinaryNode)
+             
+        elif compareNode.branch_count() == 0:
+            return False
+        if compareNode.has_branch("left"):
+            resultLeft = __recadd(self, compareNode.get_branch("left"), newBinaryNode)
+        if compareNode.has_branch("right") and not resultLeft:
+            resultRight = __recadd(self, compareNode.get_branch("right"), newBinaryNode)
+        
+    def dontuseoldlowestnoderecursiveadd(self, compareNode: BinaryNode, newBinaryNode: BinaryNode): 
         reachedTop = False
         #aka while the new node is greater than 
         #the node we are traversing up
@@ -74,7 +116,9 @@ class MaxHeap:
                     prevLeftBranch = previousDad.get_branch("left")
                     self._dad.set_branch("left", prevLeftBranch)
             return None
-        elif compareNode.branch_count() == 0:
+        elif compareNode.branch_count() > 0:
+            #okay we move on to the next two reasons
+            #this is the case where we have a comparenode that is bigger 
         #Reason 3: we found a compareNode that is greater, and it has (branches) that are
         #greater than the current one, so we do the same shift thing     
         if compareNode.get_branch("left") < newBinaryNode: 
