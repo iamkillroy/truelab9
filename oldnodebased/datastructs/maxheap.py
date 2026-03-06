@@ -25,6 +25,8 @@ class MaxHeap:
         #seems tough but recursion can help us out
         self.__recadd(self._adam, newBinaryNode) #start to add recursively starting at lowest Node
     def __reclean(self, compareNode: BinaryNode, newBinaryNode: BinaryNode):
+        """Recursively cleans a binary tree by going down and ordering elements"""
+        #to preserve complete binary tree
         pass
     def __recadd(self, compareNode: BinaryNode, newBinaryNode: BinaryNode):
         
@@ -66,12 +68,17 @@ class MaxHeap:
                     self.__reclean(self, compareNode.get_branch("left"), newBinaryNode)
                 if compareNode.get_branch("right") > newBinaryNode:
                     self.__reclean(self, compareNode.get_branch("right"), newBinaryNode)
-             
+                 
         elif compareNode.branch_count() == 0:
-            return False
+            return False #we do this because we go from the top to the bottom
+            #the branch has no potential and is pruned from our search
+        #if we have a right branch
         if compareNode.has_branch("left"):
             resultLeft = __recadd(self, compareNode.get_branch("left"), newBinaryNode)
-        if compareNode.has_branch("right") and not resultLeft:
+        #this is critical, we have to check if left and right
+        #both exist and if they have a result, then not to add
+        #the lement twice (and not resultLeft)
+        elif compareNode.has_branch("right") and not resultLeft:
             resultRight = __recadd(self, compareNode.get_branch("right"), newBinaryNode)
         
     def dontuseoldlowestnoderecursiveadd(self, compareNode: BinaryNode, newBinaryNode: BinaryNode): 
@@ -119,6 +126,7 @@ class MaxHeap:
         elif compareNode.branch_count() > 0:
             #okay we move on to the next two reasons
             #this is the case where we have a comparenode that is bigger 
+            pass
         #Reason 3: we found a compareNode that is greater, and it has (branches) that are
         #greater than the current one, so we do the same shift thing     
         if compareNode.get_branch("left") < newBinaryNode: 

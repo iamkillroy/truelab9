@@ -1,0 +1,3 @@
+DEBUG:datastructs.maxheap:Adding 1
+DEBUG:datastructs.maxheap:Adding 12
+DEBUG:datastructs.maxheap:Adding 2

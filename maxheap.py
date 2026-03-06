@@ -29,6 +29,8 @@ class MaxHeap:
             parentIndex = (entryIndex-1) // 2
     def getHighest(self):
         return self._heapList[0]
+    def count(self):
+        return len(self._heapList)
     def pop(self):
         """Removes the top"""
         self._heapList[0] = self._heapList[-1]
