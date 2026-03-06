@@ -1,3 +1,6 @@
+from functools import total_ordering
+
+@total_ordering
 class BinaryNode:
     def __init__(self, entry):
         """Makes a binary node"""
@@ -39,7 +42,7 @@ class BinaryNode:
         """Gets branch count (how many branches are connected""" 
         #here we can type case right and left's having branches
         #as two integers and return the result of those two
-        return int(has_branch("right")) + int(has_branch("left"))
+        return int(self.has_branch("right")) + int(self.has_branch("left"))
     def value(self):
         """Returns the inner entry value"""
         return self._entry
@@ -61,3 +64,16 @@ class BinaryNode:
                 return self._left is not None 
             case _:
                 raise Exception(f"Unknown branch name {branchName}")
+    #total_ordering decorator should add all compare
+    #functionalities with just __eq__ and __lt__
+    def __eq__(self, other):
+        if type(other) == int:
+            return self._entry == other
+        else:
+            return self._entry == other._entry
+    def __lt__(self, other):
+        if type(other) == int:
+            return self._entry < other
+        else:
+            return self._entry < other
+

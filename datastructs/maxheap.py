@@ -50,18 +50,32 @@ class MaxHeap:
         if reachedTop:
             #now we reassign adam to this element because it is evidently
             #the largest in the heap
-            previousDad = self._dad
-            self._dad = newBinaryNode
+            previousDad = self._adam 
+            self._adam = newBinaryNode
             #okay now we want to set the left and right to keep the maxheap complete
             #this means we need to get the previousDad's largest branch and then
             #set his dad to the new dad
             newDadLeftBranchNode = None
-            if previousDad.get_branch("left").evalue() > previousDad.get_branch("right").evalue():
-                newDadLeftBranchNode = previousDad.get_branch("left")
-            else:
-                newDadLeftBranchNode = previousDad.get_branch("right")
-            self._dad.setBranch("left", newDadLeftBranchNode)
-            self._dad.setBranch("right", previousDad)
-        #Reason 2: we found a compareNode that is greater, and it has (branches) that are
-        #greater than the current
-                 
+            if previousDad.branch_count() == 2:
+                if previousDad.get_branch("left").evalue() > previousDad.get_branch("right").evalue():
+                    newDadLeftBranchNode = previousDad.get_branch("left")
+                else:
+                    newDadLeftBranchNode = previousDad.get_branch("right")
+                self._dad.get_branch("left", newDadLeftBranchNode)
+                self._dad.get_branch("right", previousDad)
+            elif previousDad.branch_count == 1:
+                #this is the same as the first branch compare
+                #except we removed the comparison between the left and right
+                #and also preserve the original right or left position
+                if previousDad.has_branch("right"):
+                    prevRightBranch = previousDad.get_branch("right")
+                    self._dad.set_branch("right", prevRightBranch)
+                else:
+                    prevLeftBranch = previousDad.get_branch("left")
+                    self._dad.set_branch("left", prevLeftBranch)
+            return None
+        elif compareNode.branch_count() == 0:
+        #Reason 3: we found a compareNode that is greater, and it has (branches) that are
+        #greater than the current one, so we do the same shift thing     
+        if compareNode.get_branch("left") < newBinaryNode: 
+            smallerLeftNode = compareNode.get_branch("left")
