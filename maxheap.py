@@ -1,6 +1,7 @@
 class MaxHeap:
     def __init__(self):
         self._heapList = []
+        self._itemCount = 0
     def d(self):
         if not self._heapList:
             print("(empty)")
@@ -27,10 +28,11 @@ class MaxHeap:
             self._heapList[entryIndex], self._heapList[parentIndex] = self._heapList[parentIndex], self._heapList[entryIndex]
             entryIndex = parentIndex
             parentIndex = (entryIndex-1) // 2
+        self._itemCount += 1
     def getHighest(self):
         return self._heapList[0]
     def count(self):
-        return len(self._heapList)
+        return self._itemCount
     def pop(self):
         """Removes the top"""
         self._heapList[0] = self._heapList[-1]
@@ -51,3 +53,4 @@ class MaxHeap:
                 break 
             self._heapList[i], self._heapList[largest] = self._heapList[largest], self._heapList[i]
             i = largest
+        self._itemCount -= 1
